@@ -9,7 +9,7 @@ RUN apk add --no-cache wget curl jq
 
 # Fetch the latest version number, download, and extract the file
 RUN VERSION=$(curl -s https://api.github.com/repos/vnt-dev/vnts/releases/latest | jq -r .tag_name) && \
-    wget "https://github.com/vnt-dev/vnts/releases/download/v${VERSION}/vnts-x86_64-unknown-linux-musl-${VERSION}.tar.gz" && \
+    wget "https://github.com/vnt-dev/vnts/releases/download/${VERSION}/vnts-x86_64-unknown-linux-musl-${VERSION}.tar.gz" && \
     tar -xzvf vnts-x86_64-unknown-linux-musl-${VERSION}.tar.gz -C /app && \
     rm vnts-x86_64-unknown-linux-musl-${VERSION}.tar.gz
 
