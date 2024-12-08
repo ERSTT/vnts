@@ -5,7 +5,7 @@ FROM alpine
 WORKDIR /app
 
 # Install necessary dependencies
-RUN apk add --no-cache wget jq
+RUN apk add --no-cache wget curl jq
 
 # Fetch the latest version number
 RUN VERSION=$(curl -s https://api.github.com/repos/vnt-dev/vnts/releases/latest | jq -r .tag_name) && \
