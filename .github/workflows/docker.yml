@@ -1,0 +1,33 @@
+name: Build and Push Docker Image
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build_and_check_changes:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Get the latest version tag from GitHub API
+        id: get_version
+        run: |
+          VERSION=$(curl -s https://api.github.com/repos/vnt-dev/vnts/releases/latest | jq -r .tag_name | sed 's/^v//')
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+          echo "Found version: $VERSION"
+
+      - name: Build Docker image
+        run: |
+          # Build the Docker image with the tag using the version obtained
+          docker build -t erstt/vnts:${{ env.VERSION }} -t erstt/vnts:latest .
+          
+          # Push the Docker images
+          docker push erstt/vnts:${{ env.VERSION }}
+          docker push erstt/vnts:latest
