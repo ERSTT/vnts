@@ -25,7 +25,20 @@ jobs:
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
           echo "Found version: $VERSION"
 
+      - name: Check if the version has changed
+        id: check_version
+        run: |
+          # Check if the version exists on Docker Hub
+          IMAGE_EXISTS=$(docker pull erstt/vnts:${{ env.VERSION }} > /dev/null 2>&1; echo $?)
+          if [ $IMAGE_EXISTS -eq 0 ]; then
+            echo "Image with version ${{ env.VERSION }} already exists, skipping build."
+            echo "skip=true" >> $GITHUB_ENV
+          else
+            echo "New version detected, building image."
+            echo "skip=false" >> $GITHUB_ENV
+
       - name: Build Docker image
+        if: env.skip != 'true'
         run: |
           # Build the Docker image with the tag using the version obtained
           docker build -t erstt/vnts:${{ env.VERSION }} -t erstt/vnts:latest .
