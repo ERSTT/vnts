@@ -36,6 +36,7 @@ jobs:
           else
             echo "New version detected, building image."
             echo "skip=false" >> $GITHUB_ENV
+          fi
 
       - name: Build Docker image
         if: env.skip != 'true'
