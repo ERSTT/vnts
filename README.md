@@ -33,7 +33,7 @@ services:
       - 29870:29870
       - 29872:29872
       - 29872:29872/udp
-    command: > 
+    command: |
       -p 29872 -w 1234 -g 10.10.0.1 -f -m 255.255.255.0 --log-path /dev/null
     image: erstt/vnts:latest
 ```
@@ -83,7 +83,7 @@ services:
       - 29870:29870
       - 29872:29872
       - 29872:29872/udp
-    command: > 
+    command: |
       -p 29872 -w 1234 -g 10.10.0.1 -f -m 255.255.255.0 --log-path /dev/null
     image: erstt/vnts:latest
 ```
