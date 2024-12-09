@@ -1,6 +1,8 @@
 name: Build and Push Docker Image
 
 on:
+  schedule:
+    - cron: '45 3 5,20 * *'
   workflow_dispatch:
 
 jobs:
