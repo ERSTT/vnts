@@ -1,11 +1,7 @@
-### Switch Language
-To switch between languages, change the configuration below:
-- For **Chinese**: `/zh`  
-- For **English**: `/en`
----
 ### Language
 - [中文](#快速开始)
-- [English](#Quick Start)
+- [English](#quick-start)
+---
 # 快速开始
 
 ### 使用 Docker CLI 部署
