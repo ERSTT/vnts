@@ -1,26 +1,29 @@
-# Use Alpine as the base image
 FROM alpine
 
-# Set the working directory
+ARG TARGETARCH
+
 WORKDIR /app
 
-# Install necessary dependencies
-RUN apk add --no-cache wget curl jq
+RUN apk add --no-cache wget curl jq && \
+    VERSION=$(curl -s https://api.github.com/repos/vnt-dev/vnts/releases/latest | jq -r .tag_name) && \
+    if [ "$TARGETARCH" = "amd64" ]; then \
+        ARCH_STR="x86_64-unknown-linux-musl"; \
+    elif [ "$TARGETARCH" = "arm64" ]; then \
+        ARCH_STR="aarch64-unknown-linux-musl"; \
+    elif [ "$TARGETARCH" = "arm" ]; then \
+        ARCH_STR="arm-unknown-linux-musleabihf"; \
+    else \
+        echo "Unsupported architecture: $TARGETARCH" && exit 1; \
+    fi && \
+    FILE_NAME="vnts2-${ARCH_STR}-${VERSION}" && \
+    wget "https://github.com/vnt-dev/vnts/releases/download/${VERSION}/${FILE_NAME}.tar.gz" && \
+    tar -xzvf ${FILE_NAME}.tar.gz -C /app && \
+    rm ${FILE_NAME}.tar.gz && \
+    mv /app/vnts2-* /app/vnts || true && \
+    chmod +x /app/vnts
 
-# Fetch the latest version number, download, and extract the file
-RUN VERSION=$(curl -s https://api.github.com/repos/vnt-dev/vnts/releases/latest | jq -r .tag_name) && \
-    wget "https://github.com/vnt-dev/vnts/releases/download/${VERSION}/vnts-x86_64-unknown-linux-musl-${VERSION}.tar.gz" && \
-    tar -xzvf vnts-x86_64-unknown-linux-musl-${VERSION}.tar.gz -C /app && \
-    rm vnts-x86_64-unknown-linux-musl-${VERSION}.tar.gz
-
-# Add execution permissions to the vnts file
-RUN chmod +x /app/vnts
-
-# Set environment variable to include /app in the PATH
 ENV PATH="/app:${PATH}"
 
-# Set the default command, allowing argument passing
 ENTRYPOINT ["/app/vnts"]
 
-# The default command passed at runtime (can be overridden with -e or --args when running the container)
 CMD ["--help"]
