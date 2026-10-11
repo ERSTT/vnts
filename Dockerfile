@@ -22,5 +22,3 @@ RUN apk add --no-cache wget curl jq && \
 ENV PATH="/app:${PATH}"
 
 ENTRYPOINT ["/app/vnts"]
-
-CMD ["--help"]
