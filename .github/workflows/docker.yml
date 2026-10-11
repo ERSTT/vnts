@@ -33,7 +33,7 @@ jobs:
           INPUT_VERSION="${{ github.event.inputs.version }}"
           
           if [ -n "$INPUT_VERSION" ]; then
-            TAG="${INPUT_VERSION#v}"
+            TAG="v${INPUT_VERSION#v}"
             echo "Using manual input version: $TAG"
           else
             TAG=$(curl -s https://api.github.com/repos/vnt-dev/vnts/releases/latest | jq -r .tag_name)
