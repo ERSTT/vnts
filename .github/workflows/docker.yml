@@ -18,6 +18,9 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: Get the latest version tag from GitHub API
         id: get_version
         run: |
@@ -38,12 +41,11 @@ jobs:
             echo "skip=false" >> $GITHUB_ENV
           fi
 
-      - name: Build Docker image
+      - name: Build and Push Multi-architecture Docker image
         if: env.skip != 'true'
         run: |
-          # Build the Docker image with the tag using the version obtained
-          docker build -t erstt/vnts:${{ env.VERSION }} -t erstt/vnts:latest .
-          
-          # Push the Docker images
-          docker push erstt/vnts:${{ env.VERSION }}
-          docker push erstt/vnts:latest
+          docker buildx build \
+            --platform linux/amd64,linux/arm64,linux/arm/v7 \
+            -t erstt/vnts:${{ env.VERSION }} \
+            -t erstt/vnts:latest \
+            --push .
