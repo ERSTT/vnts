@@ -16,10 +16,7 @@ RUN apk add --no-cache wget curl jq && \
         echo "Unsupported architecture: $TARGETARCH" && exit 1; \
     fi && \
     FILE_NAME="vnts2-${ARCH_STR}-${VERSION}" && \
-    wget "https://github.com/vnt-dev/vnts/releases/download/${VERSION}/${FILE_NAME}.tar.gz" && \
-    tar -xzvf ${FILE_NAME}.tar.gz -C /app && \
-    rm ${FILE_NAME}.tar.gz && \
-    mv /app/vnts2-* /app/vnts || true && \
+    wget "https://github.com/vnt-dev/vnts/releases/download/${VERSION}/${FILE_NAME}" -O /app/vnts && \
     chmod +x /app/vnts
 
 ENV PATH="/app:${PATH}"
