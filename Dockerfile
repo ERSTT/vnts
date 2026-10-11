@@ -1,11 +1,14 @@
 FROM alpine
 
+ARG VERSION
 ARG TARGETARCH
 
 WORKDIR /app
 
 RUN apk add --no-cache wget curl jq && \
-    VERSION=$(curl -s https://api.github.com/repos/vnt-dev/vnts/releases/latest | jq -r .tag_name) && \
+    if [ -z "$VERSION" ]; then \
+        VERSION=$(curl -s https://api.github.com/repos/vnt-dev/vnts/releases/latest | jq -r .tag_name); \
+    fi && \
     if [ "$TARGETARCH" = "amd64" ]; then \
         ARCH_STR="x86_64-unknown-linux-musl"; \
     elif [ "$TARGETARCH" = "arm64" ]; then \
